@@ -1,8 +1,15 @@
 ---
 title: "What are the characteristics of successful startups?"
 author: "Ranak Bansal, Charles Miele, Mehar Poreddy"
-date: '2022-12-05'
-output: pdf_document
+date: "2022-12-05"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 5
+    df_print: paged
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
 ---
 
 ```{r setup, include=FALSE}
@@ -97,7 +104,7 @@ Our data collection process had four main steps:
    web-scraping script using the selenium library. To acquire the company's founded state, we manually researched this data.
 
 
-**Importing our data**
+### Importing our data
 ```{r data}
 companies <- read.csv("final.csv")
 success <- subset(companies, Failed == 0)
@@ -151,7 +158,7 @@ In this section, we analyze our variables independently. We chose this particula
 because we found them to be the most insightful and intuitive. In the later sections,
 we analyze more variables in aggregate.
 
-**Map**
+### Map
 ```{r warning=FALSE}
 #All startups
 data <- xtabs(~State, Regions)
@@ -204,7 +211,7 @@ significant predictor of success; however, further statistical analysis will nee
 to be conducted to prove this.
 
 
-**Most Successful VCs**
+### Most Successful VCs
 ```{r VCs}
 # Function that returns a list containing the raw data of each company's top
 # 5 investors. If the company had less than 5 investors, it simply showed all
@@ -257,7 +264,7 @@ invested in the most failed startups, as accelerators tend to invest in a larger
 amount of companies compared to the average venture capital firm. However, we can
 see that Y Combinator invests in the most succesful companies.
 
-**Funding Rounds**
+### Funding Rounds
 ```{r warning=FALSE}
 companies$LastFundingType <- as.factor(companies$LastFundingType)
 ggplot(companies, aes(x=LastFundingType, fill=ifelse(Failed == 0, 'blue', 'red'))) +
@@ -273,7 +280,7 @@ are in earlier stages (pre-seed and seed), whereas most succesful startups are
 in later stages (Series A and Series B). This would indicate to venture capital firms
 that companies in later rounds are lower risk investments, but also lower reward investments.
 
-**Year founded**
+### Year founded
 ```{r yearFounded}
 ggplot(companies, aes(x=FoundedDate, fill=ifelse(Failed == 0, 'red', 'blue'))) +
   geom_histogram(binwidth=1, colour="black", position="dodge") +
@@ -286,7 +293,7 @@ From the barplot above, we can see that a smaller amount of companies received f
 the 2008 recession because VC firms tend to be more selective in periods of economic distress. 
 We also note that there is a large increase in the number of companies founded in the aftermath of the recession.
 
-**Multi-time founders**
+### Multi-time founders
 ```{r multiFounders}
 getFounderList <- function(d) {
   results <- c()
@@ -332,7 +339,7 @@ there are three founders who have started both failed and successful companies a
 one person who has founded two failed companies. Since this data is sparse, we cannot draw any 
 meaningful conclusions.
 
-**Text Analysis**
+### Text Analysis
 
 _Word Cloud of Company's (Full) Description_
 ```{r warning=FALSE}
@@ -413,7 +420,7 @@ separated between successful and failed. This plot seems to indicate that a webs
 significant predictor of success; however, further statistical analysis will need
 to be conducted to prove this.
 
-**Dendrogram**
+### Dendrogram
 ```{r warning=FALSE}
 # take only relevant numeric variables
 data_numeric <- companies[,c(7,8,9,10,12,13,15,16,17,18,20,24,25)]
@@ -501,7 +508,7 @@ of each individual PC tells us how heavy each variable (e.g. number of founders,
 is weighted. We then conduct a second PCA exploring the opposite relationship (this will be discussed in further depth below).
 
 
-**Setup**
+### Setup
 ```{r PCA}
 PCA.data <- companies
 row.names(PCA.data) <- PCA.data$Name
@@ -571,7 +578,7 @@ s_plot <- function(d){
 ```
 
 
-**Company Analysis**
+### Company Analysis
 ```{r PCA1}
 # PC1
 PCA1 <- prcomp(PCA.data, scale=TRUE)
@@ -597,7 +604,7 @@ LinkedIn followers, and active tech count contribute to a company's success. One
 because most companies, regardless of their status, tend to have one lead. Investments with multiple leads, however, tend to be more successful. This is likely because the lead
 investor is doing substantial research on the startup, so having more leads results higher quality due-diligence.
 
-**CrunchBase Variable Analysis**
+### CrunchBase Variable Analysis
 
 In the second PCA, we transposed our data, which allowed us to examine the relationship
 between each variable of the company data set. The loading scores in this PCA were not as
@@ -704,7 +711,7 @@ what is the cost?
 To answer this question & get a more accurate measure of our the error of our Lasso model, 
 we decided to conduct a bootstrap simulation to see the average error of our predictive model.
 
-**Bootstrap**
+### Bootstrap
 ```{r warning=FALSE}
 
 # This is a simplified version of the lassoReg function defined above.
